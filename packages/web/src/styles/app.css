@@ -23,32 +23,162 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
+  height: 64px;
   padding: 0 var(--space-5);
-  border-bottom: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
   background: linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--surface) 60%, transparent),
-    transparent
+    color-mix(in oklch, var(--surface-elevated) 90%, transparent),
+    color-mix(in oklch, var(--surface) 60%, transparent)
   );
+  border-bottom: 1px solid color-mix(in oklch, var(--border-strong) 70%, transparent);
+  /* Top hairline highlight + bottom shadow — like a brushed-metal front panel */
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--text-primary) 6%, transparent),
+    0 1px 0 oklch(0% 0 0 / 0.4);
   backdrop-filter: blur(8px);
 }
 
+.app-header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.app-header-divider {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in oklch, var(--border-strong) 80%, transparent),
+    transparent
+  );
+}
+
+.app-header-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
 .app-title {
+  font-family: var(--font-tech);
   font-size: var(--type-h1);
-  font-weight: 600;
+  font-weight: 700;
   margin: 0;
-  letter-spacing: -0.015em;
-  background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-primary);
+  text-shadow: 0 0 20px color-mix(in oklch, var(--accent) 30%, transparent);
+}
+
+.app-header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-tech);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.app-header-meta strong {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.app-header-meta-sep {
+  color: color-mix(in oklch, var(--text-muted) 40%, transparent);
+}
+
+@media (max-width: 768px) {
+  .app-header-meta {
+    display: none;
+  }
 }
 
 .app-header-actions {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+}
+
+/* ─── Status LED indicator dots ─────────────────────────────────────── */
+
+.status-led {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--status-off);
+  box-shadow:
+    inset 0 0 0 1px oklch(0% 0 0 / 0.4),
+    inset 0 1px 1px oklch(100% 0 0 / 0.15);
+  flex-shrink: 0;
+}
+
+.status-led--power {
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, var(--status-power) 100%, white 30%),
+    var(--status-power) 65%
+  );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--status-power) 60%, oklch(0% 0 0 / 0.4)),
+    0 0 4px color-mix(in oklch, var(--status-power) 70%, transparent),
+    0 0 12px color-mix(in oklch, var(--status-power) 35%, transparent);
+  animation: status-led-pulse 3s ease-in-out infinite;
+}
+
+.status-led--active {
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, var(--status-active) 100%, white 30%),
+    var(--status-active) 65%
+  );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--status-active) 60%, oklch(0% 0 0 / 0.4)),
+    0 0 4px color-mix(in oklch, var(--status-active) 70%, transparent),
+    0 0 12px color-mix(in oklch, var(--status-active) 35%, transparent);
+}
+
+.status-led--warn {
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, var(--status-warn) 100%, white 30%),
+    var(--status-warn) 65%
+  );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--status-warn) 60%, oklch(0% 0 0 / 0.4)),
+    0 0 4px color-mix(in oklch, var(--status-warn) 70%, transparent),
+    0 0 12px color-mix(in oklch, var(--status-warn) 35%, transparent);
+}
+
+@keyframes status-led-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-led--power {
+    animation: none;
+  }
+}
+
+.status-led-label {
+  font-family: var(--font-tech);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-widest);
+  color: var(--text-muted);
+  text-transform: uppercase;
 }
 
 .app-main {
