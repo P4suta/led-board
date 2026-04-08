@@ -1,0 +1,107 @@
+/* tokens.css — LED 電光掲示板 design tokens
+ * Source of truth: /DESIGN.md
+ * 全ての色は OKLCH を一次表現とし、hex は近似コメント。
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* ─────────────────────────────────────────────────────────────
+   * Chrome — Dark theme (default)
+   * ───────────────────────────────────────────────────────────── */
+  --bg: oklch(11% 0.005 240); /* #0A0A0B — Linear-style off-black */
+  --surface: oklch(15% 0.005 240); /* #141416 */
+  --surface-elevated: oklch(19% 0.006 240); /* #1C1C20 */
+  --surface-overlay: oklch(11% 0 0 / 0.6); /* fullscreen overlay bg */
+  --border: oklch(28% 0.006 240); /* #27272A */
+  --border-strong: oklch(38% 0.008 240); /* #3F3F46 */
+
+  --text-primary: oklch(98% 0.003 100); /* #FAFAF9 */
+  --text-secondary: oklch(70% 0.008 240); /* #A1A1AA */
+  --text-muted: oklch(55% 0.008 240); /* #71717A */
+
+  --accent: oklch(72% 0.18 65); /* #FB923C — warm amber */
+  --accent-hover: oklch(80% 0.16 70); /* #FDBA74 */
+  --accent-soft: color-mix(in oklch, var(--accent) 20%, var(--bg));
+  --focus-ring: oklch(75% 0.2 65 / 0.6);
+
+  --danger: oklch(70% 0.2 25); /* #F87171 */
+  --success: oklch(75% 0.18 145); /* #4ADE80 */
+
+  /* ─────────────────────────────────────────────────────────────
+   * LED display palette — physically authentic LED colors
+   * ───────────────────────────────────────────────────────────── */
+  --led-red: oklch(65% 0.24 32); /* #FF2A00 — true LED scarlet */
+  --led-amber: oklch(80% 0.18 75); /* #FFAE00 — caution amber */
+  --led-jr-orange: oklch(72% 0.19 55); /* #FF8C00 — JR Orange */
+  --led-green: oklch(85% 0.27 145); /* #00DD33 — railway green */
+  --led-blue: oklch(65% 0.2 245); /* #0066FF */
+  --led-white: oklch(96% 0.02 85); /* #FFF5E6 — warm white */
+  --led-cool-white: oklch(96% 0.005 240); /* #F5F5FA — cool white */
+
+  /* ─────────────────────────────────────────────────────────────
+   * Spacing scale (4px base)
+   * ───────────────────────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ─────────────────────────────────────────────────────────────
+   * Border radius
+   * ───────────────────────────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* ─────────────────────────────────────────────────────────────
+   * Typography
+   * ───────────────────────────────────────────────────────────── */
+  --font-ui:
+    -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Segoe UI", "Inter", system-ui,
+    sans-serif;
+  --font-mono:
+    ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", "Source Han Code JP", Menlo,
+    Consolas, monospace;
+
+  --type-display: clamp(2.5rem, 8vw, 5rem);
+  --type-h1: 1.75rem;
+  --type-h2: 1.25rem;
+  --type-body: 1rem;
+  --type-small: 0.875rem;
+  --type-micro: 0.75rem;
+
+  /* ─────────────────────────────────────────────────────────────
+   * Shadows / elevation
+   * ───────────────────────────────────────────────────────────── */
+  --shadow-1: 0 1px 2px 0 oklch(0% 0 0 / 0.3);
+  --shadow-2: 0 4px 8px -2px oklch(0% 0 0 / 0.4);
+  --shadow-3: 0 12px 24px -6px oklch(0% 0 0 / 0.5);
+  --shadow-inset: inset 0 1px 2px 0 oklch(0% 0 0 / 0.2);
+
+  /* ─────────────────────────────────────────────────────────────
+   * Motion
+   * ───────────────────────────────────────────────────────────── */
+  --ease-standard: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+
+  --dur-instant: 80ms;
+  --dur-fast: 160ms;
+  --dur-standard: 240ms;
+  --dur-slow: 400ms;
+
+  /* ─────────────────────────────────────────────────────────────
+   * Layout breakpoints (referenced from media queries)
+   * ───────────────────────────────────────────────────────────── */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1440px;
+}
