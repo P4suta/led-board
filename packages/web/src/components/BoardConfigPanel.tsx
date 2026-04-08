@@ -2,16 +2,17 @@ import { type Component, For } from 'solid-js';
 import type { DotShape } from '../canvas/sprite-atlas';
 import type { FontName } from '../font/loader';
 import type { BoardConfig } from '../state/types';
+import { SliderRow } from './SliderRow';
 
 export interface BoardConfigPanelProps {
   readonly config: BoardConfig;
   readonly onChange: (patch: Partial<BoardConfig>) => void;
 }
 
-const SHAPES: ReadonlyArray<{ value: DotShape; label: string }> = [
-  { value: 'round', label: '●' },
-  { value: 'rounded', label: '◼' },
-  { value: 'square', label: '■' },
+const SHAPES: ReadonlyArray<{ value: DotShape; label: string; aria: string }> = [
+  { value: 'round', label: '●', aria: '丸ドット' },
+  { value: 'rounded', label: '◼', aria: '角丸ドット' },
+  { value: 'square', label: '■', aria: '角ドット' },
 ];
 
 const FONTS: ReadonlyArray<{ value: FontName; label: string }> = [
@@ -24,37 +25,27 @@ export const BoardConfigPanel: Component<BoardConfigPanelProps> = (props) => {
     <div class="board-config-panel">
       <h2 class="panel-heading">ボード設定</h2>
 
-      <fieldset class="field">
-        <label class="field-label" for="cfg-cols">
-          列数: <span class="value-badge">{props.config.cols}</span>
-        </label>
-        <input
-          id="cfg-cols"
-          type="range"
-          min={8}
-          max={256}
-          step={8}
-          value={props.config.cols}
-          onInput={(e) => props.onChange({ cols: Number(e.currentTarget.value) })}
-          class="range-input"
-        />
-      </fieldset>
+      <SliderRow
+        id="cfg-cols"
+        label="幅 (横方向 ↔)"
+        value={props.config.cols}
+        min={8}
+        max={256}
+        step={1}
+        unit="ドット"
+        onChange={(v) => props.onChange({ cols: v })}
+      />
 
-      <fieldset class="field">
-        <label class="field-label" for="cfg-rows">
-          行数: <span class="value-badge">{props.config.rows}</span>
-        </label>
-        <input
-          id="cfg-rows"
-          type="range"
-          min={8}
-          max={64}
-          step={4}
-          value={props.config.rows}
-          onInput={(e) => props.onChange({ rows: Number(e.currentTarget.value) })}
-          class="range-input"
-        />
-      </fieldset>
+      <SliderRow
+        id="cfg-rows"
+        label="高さ (縦方向 ↕)"
+        value={props.config.rows}
+        min={8}
+        max={128}
+        step={1}
+        unit="ドット"
+        onChange={(v) => props.onChange({ rows: v })}
+      />
 
       <fieldset class="field">
         <legend class="field-label">ドット形状</legend>
@@ -64,6 +55,7 @@ export const BoardConfigPanel: Component<BoardConfigPanelProps> = (props) => {
               <button
                 type="button"
                 aria-pressed={props.config.shape === opt.value}
+                aria-label={opt.aria}
                 class="segmented-option"
                 classList={{ 'segmented-option--active': props.config.shape === opt.value }}
                 onClick={() => props.onChange({ shape: opt.value })}
@@ -75,25 +67,22 @@ export const BoardConfigPanel: Component<BoardConfigPanelProps> = (props) => {
         </div>
       </fieldset>
 
-      <fieldset class="field">
-        <label class="field-label" for="cfg-glow">
-          グロー: <span class="value-badge">{props.config.glow}</span>
-        </label>
-        <input
-          id="cfg-glow"
-          type="range"
-          min={0}
-          max={12}
-          step={1}
-          value={props.config.glow}
-          onInput={(e) => props.onChange({ glow: Number(e.currentTarget.value) })}
-          class="range-input"
-        />
-      </fieldset>
+      <SliderRow
+        id="cfg-glow"
+        label="グロー (発光の滲み)"
+        value={props.config.glow}
+        min={0}
+        max={12}
+        step={1}
+        onChange={(v) => props.onChange({ glow: v })}
+      />
 
       <fieldset class="field">
-        <legend class="field-label">フォント</legend>
+        <label class="field-label" for="cfg-font">
+          フォント
+        </label>
         <select
+          id="cfg-font"
           class="text-input"
           value={props.config.fontName}
           onChange={(e) => props.onChange({ fontName: e.currentTarget.value as FontName })}
