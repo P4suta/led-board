@@ -1,0 +1,48 @@
+# CI workflow — lint, typecheck, test, build.
+# Security note: this workflow uses NO untrusted inputs (no github.event.* interpolation
+# in run: blocks). All steps use trusted action versions and bun script entry points only.
+# Reviewed against https://github.blog/security/vulnerability-research/how-to-catch-github-actions-workflow-injections-before-attackers-do/
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  ci:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test with coverage
+        run: bun run test:coverage
+
+      - name: Build
+        run: bun run build
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: ignore
