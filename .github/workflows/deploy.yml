@@ -9,14 +9,6 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
-# Force JavaScript actions to run on Node.js 24 — silences the deprecation
-# warning that fires for transitive dependencies of actions/upload-pages-artifact
-# which still pin upload-artifact at a SHA built on Node 20 (as of April 2026).
-# Once GitHub publishes a refreshed upload-pages-artifact this can be removed.
-# Reference: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 permissions:
   contents: read
   pages: write
@@ -47,10 +39,26 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v6
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+      # Inline the upload-pages-artifact logic so we can pin upload-artifact
+      # to v7 (Node.js 24) directly. Otherwise upload-pages-artifact@v4
+      # transitively pulls in upload-artifact@v4.6.2 which is Node.js 20.
+      # The tar layout matches what upload-pages-artifact would produce.
+      - name: Archive Pages artifact
+        run: |
+          tar \
+            --dereference --hard-dereference \
+            --directory packages/web/dist \
+            --exclude=.git \
+            --exclude=.github \
+            -cvf "$RUNNER_TEMP/artifact.tar" \
+            .
+      - name: Upload Pages artifact
+        uses: actions/upload-artifact@v7
         with:
-          path: packages/web/dist
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
 
   deploy:
     needs: build
