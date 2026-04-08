@@ -31,8 +31,7 @@ export interface BoardSizePickerProps {
 }
 
 export const BoardSizePicker: Component<BoardSizePickerProps> = (props) => {
-  const isActive = (p: BoardSizePreset): boolean =>
-    p.cols === props.cols && p.rows === props.rows;
+  const isActive = (p: BoardSizePreset): boolean => p.cols === props.cols && p.rows === props.rows;
 
   return (
     <fieldset class="field">

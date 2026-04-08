@@ -52,68 +52,17 @@ export const SceneEditor: Component<SceneEditorProps> = (props) => {
         <span class="panel-section-id">SCN-01</span>
       </header>
       <div class="panel-section-body">
-      <fieldset class="field">
-        <legend class="field-label">表示モード</legend>
-        <div class="segmented">
-          <For each={SCENE_KINDS}>
-            {(opt) => (
-              <button
-                type="button"
-                aria-pressed={props.scene.kind === opt.value}
-                class="segmented-option"
-                classList={{ 'segmented-option--active': props.scene.kind === opt.value }}
-                onClick={() => props.onChange({ kind: opt.value })}
-              >
-                {opt.label}
-              </button>
-            )}
-          </For>
-        </div>
-      </fieldset>
-
-      {props.scene.kind !== 'clock' && (
         <fieldset class="field">
-          <label class="field-label" for="scene-text">
-            テキスト
-          </label>
-          <textarea
-            id="scene-text"
-            class="text-input"
-            rows={3}
-            value={props.scene.text}
-            onInput={(e) => props.onChange({ text: e.currentTarget.value })}
-            placeholder="表示するテキストを入力..."
-          />
-        </fieldset>
-      )}
-
-      {props.scene.kind === 'scroll' && (
-        <SliderRow
-          id="scene-speed"
-          label="スクロール速度"
-          value={props.scene.speedPxPerSec}
-          min={1}
-          max={300}
-          step={1}
-          unit="px/s"
-          onChange={(v) => props.onChange({ speedPxPerSec: v })}
-        />
-      )}
-
-      {props.scene.kind === 'clock' && (
-        <fieldset class="field">
-          <legend class="field-label">フォーマット</legend>
+          <legend class="field-label">表示モード</legend>
           <div class="segmented">
-            <For each={CLOCK_FORMATS}>
+            <For each={SCENE_KINDS}>
               {(opt) => (
                 <button
                   type="button"
-                  aria-pressed={props.scene.clockFormat === opt.value}
+                  aria-pressed={props.scene.kind === opt.value}
                   class="segmented-option"
-                  classList={{
-                    'segmented-option--active': props.scene.clockFormat === opt.value,
-                  }}
-                  onClick={() => props.onChange({ clockFormat: opt.value })}
+                  classList={{ 'segmented-option--active': props.scene.kind === opt.value }}
+                  onClick={() => props.onChange({ kind: opt.value })}
                 >
                   {opt.label}
                 </button>
@@ -121,32 +70,83 @@ export const SceneEditor: Component<SceneEditorProps> = (props) => {
             </For>
           </div>
         </fieldset>
-      )}
 
-      <fieldset class="field">
-        <legend class="field-label">LED カラー</legend>
-        <div class="led-bulb-strip">
-          <For each={COLORS}>
-            {(c) => (
-              <button
-                type="button"
-                class="led-bulb"
-                classList={{ 'led-bulb--active': props.scene.color === c.value }}
-                style={{ '--bulb-color': c.cssVar }}
-                aria-pressed={props.scene.color === c.value}
-                aria-label={c.label}
-                title={c.label}
-                onClick={() => props.onChange({ color: c.value })}
-              >
-                <span class="led-bulb-glass" aria-hidden="true">
-                  <span class="led-bulb-glass-highlight" aria-hidden="true" />
-                </span>
-                <span class="led-bulb-code">{c.code}</span>
-              </button>
-            )}
-          </For>
-        </div>
-      </fieldset>
+        {props.scene.kind !== 'clock' && (
+          <fieldset class="field">
+            <label class="field-label" for="scene-text">
+              テキスト
+            </label>
+            <textarea
+              id="scene-text"
+              class="text-input"
+              rows={3}
+              value={props.scene.text}
+              onInput={(e) => props.onChange({ text: e.currentTarget.value })}
+              placeholder="表示するテキストを入力..."
+            />
+          </fieldset>
+        )}
+
+        {props.scene.kind === 'scroll' && (
+          <SliderRow
+            id="scene-speed"
+            label="スクロール速度"
+            value={props.scene.speedPxPerSec}
+            min={1}
+            max={300}
+            step={1}
+            unit="px/s"
+            onChange={(v) => props.onChange({ speedPxPerSec: v })}
+          />
+        )}
+
+        {props.scene.kind === 'clock' && (
+          <fieldset class="field">
+            <legend class="field-label">フォーマット</legend>
+            <div class="segmented">
+              <For each={CLOCK_FORMATS}>
+                {(opt) => (
+                  <button
+                    type="button"
+                    aria-pressed={props.scene.clockFormat === opt.value}
+                    class="segmented-option"
+                    classList={{
+                      'segmented-option--active': props.scene.clockFormat === opt.value,
+                    }}
+                    onClick={() => props.onChange({ clockFormat: opt.value })}
+                  >
+                    {opt.label}
+                  </button>
+                )}
+              </For>
+            </div>
+          </fieldset>
+        )}
+
+        <fieldset class="field">
+          <legend class="field-label">LED カラー</legend>
+          <div class="led-bulb-strip">
+            <For each={COLORS}>
+              {(c) => (
+                <button
+                  type="button"
+                  class="led-bulb"
+                  classList={{ 'led-bulb--active': props.scene.color === c.value }}
+                  style={{ '--bulb-color': c.cssVar }}
+                  aria-pressed={props.scene.color === c.value}
+                  aria-label={c.label}
+                  title={c.label}
+                  onClick={() => props.onChange({ color: c.value })}
+                >
+                  <span class="led-bulb-glass" aria-hidden="true">
+                    <span class="led-bulb-glass-highlight" aria-hidden="true" />
+                  </span>
+                  <span class="led-bulb-code">{c.code}</span>
+                </button>
+              )}
+            </For>
+          </div>
+        </fieldset>
       </div>
     </section>
   );
