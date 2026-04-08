@@ -24,25 +24,11 @@ export const BoardConfigPanel: Component<BoardConfigPanelProps> = (props) => {
   return (
     <section class="panel-section">
       <header class="panel-section-header">
-        <svg
-          class="panel-section-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <rect x="3" y="3" width="18" height="18" rx="2" />
-          <line x1="3" y1="9" x2="21" y2="9" />
-          <line x1="3" y1="15" x2="21" y2="15" />
-          <line x1="9" y1="3" x2="9" y2="21" />
-          <line x1="15" y1="3" x2="15" y2="21" />
-        </svg>
-        <h2 class="panel-heading">ボード</h2>
+        <span class="status-led status-led--power" aria-hidden="true" />
+        <h2 class="panel-heading">BOARD</h2>
+        <span class="panel-section-id">BRD-01</span>
       </header>
-
+      <div class="panel-section-body">
       <SliderRow
         id="cfg-cols"
         label="幅 (横方向 ↔)"
@@ -108,6 +94,7 @@ export const BoardConfigPanel: Component<BoardConfigPanelProps> = (props) => {
           <For each={FONTS}>{(f) => <option value={f.value}>{f.label}</option>}</For>
         </select>
       </fieldset>
+      </div>
     </section>
   );
 };

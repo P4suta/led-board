@@ -294,45 +294,98 @@
   }
 }
 
-/* ─── Panel sections (cards) ────────────────────────────────────────── */
+/* ─── Panel sections (instrument modules) ──────────────────────────── */
 
 .panel-section {
   background: linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--surface-elevated) 100%, transparent),
-    color-mix(in oklch, var(--surface-elevated) 70%, transparent)
+    color-mix(in oklch, var(--surface-elevated) 96%, transparent),
+    color-mix(in oklch, var(--surface) 85%, transparent)
   );
-  border: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  border: 1px solid color-mix(in oklch, var(--border-strong) 55%, transparent);
+  border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  box-shadow: var(--shadow-1);
+  overflow: hidden;
+  /* Subtle hairline highlight + soft inset shadow → "etched panel" */
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--text-primary) 4%, transparent),
+    inset 0 -1px 0 oklch(0% 0 0 / 0.4),
+    var(--shadow-1);
+  position: relative;
+}
+
+/* Decorative "rivet" dots in the corners — purely visual hardware vibe */
+.panel-section::before,
+.panel-section::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    color-mix(in oklch, var(--text-muted) 45%, transparent),
+    oklch(0% 0 0 / 0.6) 80%
+  );
+  box-shadow: inset 0 0 0 0.5px oklch(0% 0 0 / 0.6);
+  pointer-events: none;
+}
+.panel-section::before {
+  top: 6px;
+  left: 6px;
+}
+.panel-section::after {
+  top: 6px;
+  right: 6px;
 }
 
 .panel-section-header {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-1);
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid color-mix(in oklch, var(--border) 40%, transparent);
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, oklch(0% 0 0) 35%, var(--surface)),
+    color-mix(in oklch, oklch(0% 0 0) 50%, var(--surface))
+  );
+  border-bottom: 1px solid color-mix(in oklch, var(--border-strong) 70%, transparent);
+  /* Inset shadow makes the strip feel recessed, like a label channel */
+  box-shadow:
+    inset 0 1px 2px oklch(0% 0 0 / 0.5),
+    inset 0 -1px 0 color-mix(in oklch, var(--text-primary) 5%, transparent);
 }
 
-.panel-section-icon {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  color: var(--accent);
+.panel-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-4) var(--space-4);
 }
 
 .panel-heading {
+  font-family: var(--font-tech);
   font-size: var(--type-h2);
-  font-weight: 600;
-  margin: 0;
-  color: var(--text-primary);
-  letter-spacing: -0.005em;
+  font-weight: 700;
+  margin: 0 0 0 var(--space-1);
+  color: color-mix(in oklch, var(--text-primary) 92%, var(--accent));
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  flex: 1;
+  text-shadow: 0 1px 0 oklch(0% 0 0 / 0.7);
+}
+
+.panel-section-id {
+  font-family: var(--font-tech);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid color-mix(in oklch, var(--border-strong) 50%, transparent);
+  border-radius: var(--radius-sm);
+  background: oklch(0% 0 0 / 0.3);
 }
 
 /* ─── Form fields ───────────────────────────────────────────────────── */
