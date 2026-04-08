@@ -2,6 +2,7 @@ import type { ClockFormat } from '@led/core';
 import { type Component, For } from 'solid-js';
 import type { LedColorName } from '../canvas/colors';
 import type { EditableScene, EditableSceneKind } from '../state/types';
+import { SliderRow } from './SliderRow';
 
 export interface SceneEditorProps {
   readonly scene: EditableScene;
@@ -32,8 +33,30 @@ const CLOCK_FORMATS: ReadonlyArray<{ value: ClockFormat; label: string }> = [
 
 export const SceneEditor: Component<SceneEditorProps> = (props) => {
   return (
-    <div class="scene-editor">
-      <h2 class="panel-heading">シーン編集</h2>
+    <section class="panel-section">
+      <header class="panel-section-header">
+        <svg
+          class="panel-section-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="2" y="6" width="20" height="12" rx="1.5" />
+          <circle cx="6.5" cy="11" r="0.6" fill="currentColor" />
+          <circle cx="9.5" cy="11" r="0.6" fill="currentColor" />
+          <circle cx="12.5" cy="11" r="0.6" fill="currentColor" />
+          <circle cx="15.5" cy="11" r="0.6" fill="currentColor" />
+          <circle cx="6.5" cy="14" r="0.6" fill="currentColor" />
+          <circle cx="9.5" cy="14" r="0.6" fill="currentColor" />
+          <circle cx="12.5" cy="14" r="0.6" fill="currentColor" />
+          <circle cx="15.5" cy="14" r="0.6" fill="currentColor" />
+        </svg>
+        <h2 class="panel-heading">シーン</h2>
+      </header>
 
       <fieldset class="field">
         <legend class="field-label">表示モード</legend>
@@ -71,21 +94,16 @@ export const SceneEditor: Component<SceneEditorProps> = (props) => {
       )}
 
       {props.scene.kind === 'scroll' && (
-        <fieldset class="field">
-          <label class="field-label" for="scene-speed">
-            スクロール速度: <span class="value-badge">{props.scene.speedPxPerSec} px/s</span>
-          </label>
-          <input
-            id="scene-speed"
-            type="range"
-            min={10}
-            max={200}
-            step={5}
-            value={props.scene.speedPxPerSec}
-            onInput={(e) => props.onChange({ speedPxPerSec: Number(e.currentTarget.value) })}
-            class="range-input"
-          />
-        </fieldset>
+        <SliderRow
+          id="scene-speed"
+          label="スクロール速度"
+          value={props.scene.speedPxPerSec}
+          min={1}
+          max={300}
+          step={1}
+          unit="px/s"
+          onChange={(v) => props.onChange({ speedPxPerSec: v })}
+        />
       )}
 
       {props.scene.kind === 'clock' && (
@@ -123,12 +141,13 @@ export const SceneEditor: Component<SceneEditorProps> = (props) => {
                 style={{ '--swatch-color': c.cssVar }}
                 aria-label={c.label}
                 aria-pressed={props.scene.color === c.value}
+                title={c.label}
                 onClick={() => props.onChange({ color: c.value })}
               />
             )}
           </For>
         </div>
       </fieldset>
-    </div>
+    </section>
   );
 };

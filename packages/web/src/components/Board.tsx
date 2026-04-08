@@ -97,11 +97,20 @@ export const Board: Component<BoardProps> = (props) => {
   });
 
   return (
-    <div ref={containerRef} class="board-wrap">
+    <div
+      ref={containerRef}
+      class="board-wrap"
+      style={{
+        // CSS custom properties drive `aspect-ratio: var(--board-cols) / var(--board-rows)`
+        // in app.css so the wrapper auto-fits to the configured grid shape.
+        '--board-cols': String(props.cols),
+        '--board-rows': String(props.rows),
+      }}
+    >
       <canvas
         ref={canvasRef}
         class="board-canvas"
-        aria-label={`LED ドットマトリクス表示、${props.cols}列×${props.rows}行`}
+        aria-label={`LED ドットマトリクス表示、幅 ${props.cols} ドット × 高さ ${props.rows} ドット`}
         role="img"
       />
     </div>

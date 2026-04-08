@@ -4,16 +4,6 @@ import { PixelBuffer } from '../pixel-buffer/pixel-buffer';
 import { applyEffects } from './pipeline';
 import type { BlinkEffect, FadeInEffect, FadeOutEffect } from './types';
 
-function totalBrightness(buf: PixelBuffer): number {
-  let n = 0;
-  for (let y = 0; y < buf.rows; y++) {
-    for (let x = 0; x < buf.cols; x++) {
-      n += buf.get(x, y);
-    }
-  }
-  return n;
-}
-
 describe('effects/blink', () => {
   it('shows full brightness during the on phase (duty=0.5)', () => {
     const buf = PixelBuffer.create(2, 1);

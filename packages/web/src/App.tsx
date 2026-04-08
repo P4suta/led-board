@@ -5,6 +5,7 @@ import { ControlPanel } from './components/ControlPanel';
 import { FullscreenButton } from './components/FullscreenButton';
 import { KeyboardHelp } from './components/KeyboardHelp';
 import { loadFont } from './font/loader';
+import { useCursorAutoHide } from './hooks/useCursorAutoHide';
 import { useFullscreen } from './hooks/useFullscreen';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useWakeLock } from './hooks/useWakeLock';
@@ -14,6 +15,7 @@ export const App: Component = () => {
   const state = createAppState();
   const fullscreen = useFullscreen();
   useWakeLock(fullscreen.isFullscreen);
+  useCursorAutoHide(fullscreen.isFullscreen);
   const [helpOpen, setHelpOpen] = createSignal(false);
 
   // Load the font that the user has selected, re-loading on selection change.
