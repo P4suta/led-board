@@ -1,9 +1,16 @@
 # LED 電光掲示板
 
+[![CI](https://github.com/P4suta/led-board/actions/workflows/ci.yml/badge.svg)](https://github.com/P4suta/led-board/actions/workflows/ci.yml)
+[![Deploy](https://github.com/P4suta/led-board/actions/workflows/deploy.yml/badge.svg)](https://github.com/P4suta/led-board/actions/workflows/deploy.yml)
+[![CodeQL](https://github.com/P4suta/led-board/actions/workflows/codeql.yml/badge.svg)](https://github.com/P4suta/led-board/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 > ブラウザで動く **LED ドットマトリクス電光掲示板シミュレータ**。
 > PWA としてインストール可能、フルスクリーンでスクリーンセーバー的に使える。
 >
 > A browser-based LED dot-matrix sign board simulator. PWA-installable, fullscreen-capable, ambient/screensaver-friendly.
+>
+> 🌐 **Live**: <https://p4suta.github.io/led-board/>
 
 ---
 
