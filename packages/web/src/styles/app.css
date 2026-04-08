@@ -186,9 +186,52 @@
 }
 
 .range-input {
-  width: 100%;
+  flex: 1;
   height: 32px;
   accent-color: var(--accent);
+  min-width: 0;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.number-input {
+  width: 64px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-small);
+  text-align: right;
+  min-height: 36px;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.number-input::-webkit-outer-spin-button,
+.number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.number-input:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-color: var(--border-strong);
+}
+
+.unit-label {
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  color: var(--text-muted);
+  white-space: nowrap;
+  min-width: 2em;
 }
 
 .segmented {

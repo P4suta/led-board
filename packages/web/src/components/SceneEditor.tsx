@@ -2,6 +2,7 @@ import type { ClockFormat } from '@led/core';
 import { type Component, For } from 'solid-js';
 import type { LedColorName } from '../canvas/colors';
 import type { EditableScene, EditableSceneKind } from '../state/types';
+import { SliderRow } from './SliderRow';
 
 export interface SceneEditorProps {
   readonly scene: EditableScene;
@@ -71,21 +72,16 @@ export const SceneEditor: Component<SceneEditorProps> = (props) => {
       )}
 
       {props.scene.kind === 'scroll' && (
-        <fieldset class="field">
-          <label class="field-label" for="scene-speed">
-            スクロール速度: <span class="value-badge">{props.scene.speedPxPerSec} px/s</span>
-          </label>
-          <input
-            id="scene-speed"
-            type="range"
-            min={10}
-            max={200}
-            step={5}
-            value={props.scene.speedPxPerSec}
-            onInput={(e) => props.onChange({ speedPxPerSec: Number(e.currentTarget.value) })}
-            class="range-input"
-          />
-        </fieldset>
+        <SliderRow
+          id="scene-speed"
+          label="スクロール速度"
+          value={props.scene.speedPxPerSec}
+          min={1}
+          max={300}
+          step={1}
+          unit="px/s"
+          onChange={(v) => props.onChange({ speedPxPerSec: v })}
+        />
       )}
 
       {props.scene.kind === 'clock' && (
