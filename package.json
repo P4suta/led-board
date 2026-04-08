@@ -1,0 +1,41 @@
+{
+  "name": "led-board",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ブラウザ LED ドットマトリクス電光掲示板シミュレータ — PWA & screensaver",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --cwd packages/web dev",
+    "build": "bun run --cwd packages/core build && bun run --cwd packages/web build",
+    "preview": "bun run --cwd packages/web preview",
+    "test": "bun run test:core && bun run test:web",
+    "test:watch": "bun run --cwd packages/core test:watch",
+    "test:coverage": "bun run --cwd packages/core test:coverage && bun run --cwd packages/web test:coverage",
+    "test:core": "bun run --cwd packages/core test",
+    "test:web": "bun run --cwd packages/web test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc -b",
+    "mutation": "bun run --cwd packages/core mutation",
+    "build:font": "bun run tools/build-font.ts",
+    "build:icons": "bun run tools/gen-icons.ts",
+    "ci": "bun run lint && bun run typecheck && bun run test:coverage && bun run build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.0",
+    "@napi-rs/canvas": "^0.1.97",
+    "@types/node": "^25.5.2",
+    "@types/opentype.js": "^1.3.9",
+    "@vitest/coverage-v8": "^4.1.0",
+    "opentype.js": "^1.3.4",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.0"
+  },
+  "engines": {
+    "bun": ">=1.3.0"
+  }
+}
