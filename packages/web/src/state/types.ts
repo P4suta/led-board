@@ -67,7 +67,10 @@ export const DEFAULT_SETTINGS: AppSettings = {
   },
   board: {
     cols: 128,
-    rows: 16,
+    // 32 rows gives a 4:1 aspect — fills modern 16:9 screens nicely in
+    // fullscreen without being a thin strip. Old saved settings (rows=16)
+    // still load fine via parseSettings (same version=1 schema).
+    rows: 32,
     shape: 'round',
     glow: 3,
     fontName: 'k8x12L',
