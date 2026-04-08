@@ -15,13 +15,25 @@ const SCENE_KINDS: ReadonlyArray<{ value: EditableSceneKind; label: string }> = 
   { value: 'clock', label: '時計' },
 ];
 
-const COLORS: ReadonlyArray<{ value: LedColorName; label: string; cssVar: string }> = [
-  { value: 'red', label: '赤', cssVar: 'var(--led-red)' },
-  { value: 'amber', label: 'アンバー', cssVar: 'var(--led-amber)' },
-  { value: 'jr-orange', label: 'JR橙', cssVar: 'var(--led-jr-orange)' },
-  { value: 'green', label: '緑', cssVar: 'var(--led-green)' },
-  { value: 'blue', label: '青', cssVar: 'var(--led-blue)' },
-  { value: 'white', label: '白', cssVar: 'var(--led-white)' },
+interface LedBulbDef {
+  readonly value: LedColorName;
+  readonly label: string;
+  readonly code: string;
+  readonly cssVar: string;
+}
+
+const COLORS: ReadonlyArray<LedBulbDef> = [
+  { value: 'red', label: '赤 (Red)', code: 'RED', cssVar: 'var(--led-red)' },
+  { value: 'amber', label: 'アンバー (Amber)', code: 'AMB', cssVar: 'var(--led-amber)' },
+  {
+    value: 'jr-orange',
+    label: 'JR 橙 (JR Orange)',
+    code: 'JR',
+    cssVar: 'var(--led-jr-orange)',
+  },
+  { value: 'green', label: '緑 (Green)', code: 'GRN', cssVar: 'var(--led-green)' },
+  { value: 'blue', label: '青 (Blue)', code: 'BLU', cssVar: 'var(--led-blue)' },
+  { value: 'white', label: '白 (White)', code: 'WHT', cssVar: 'var(--led-white)' },
 ];
 
 const CLOCK_FORMATS: ReadonlyArray<{ value: ClockFormat; label: string }> = [
@@ -35,91 +47,22 @@ export const SceneEditor: Component<SceneEditorProps> = (props) => {
   return (
     <section class="panel-section">
       <header class="panel-section-header">
-        <svg
-          class="panel-section-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <rect x="2" y="6" width="20" height="12" rx="1.5" />
-          <circle cx="6.5" cy="11" r="0.6" fill="currentColor" />
-          <circle cx="9.5" cy="11" r="0.6" fill="currentColor" />
-          <circle cx="12.5" cy="11" r="0.6" fill="currentColor" />
-          <circle cx="15.5" cy="11" r="0.6" fill="currentColor" />
-          <circle cx="6.5" cy="14" r="0.6" fill="currentColor" />
-          <circle cx="9.5" cy="14" r="0.6" fill="currentColor" />
-          <circle cx="12.5" cy="14" r="0.6" fill="currentColor" />
-          <circle cx="15.5" cy="14" r="0.6" fill="currentColor" />
-        </svg>
-        <h2 class="panel-heading">シーン</h2>
+        <span class="status-led status-led--active" aria-hidden="true" />
+        <h2 class="panel-heading">SCENE</h2>
+        <span class="panel-section-id">SCN-01</span>
       </header>
-
-      <fieldset class="field">
-        <legend class="field-label">表示モード</legend>
-        <div class="segmented">
-          <For each={SCENE_KINDS}>
-            {(opt) => (
-              <button
-                type="button"
-                aria-pressed={props.scene.kind === opt.value}
-                class="segmented-option"
-                classList={{ 'segmented-option--active': props.scene.kind === opt.value }}
-                onClick={() => props.onChange({ kind: opt.value })}
-              >
-                {opt.label}
-              </button>
-            )}
-          </For>
-        </div>
-      </fieldset>
-
-      {props.scene.kind !== 'clock' && (
+      <div class="panel-section-body">
         <fieldset class="field">
-          <label class="field-label" for="scene-text">
-            テキスト
-          </label>
-          <textarea
-            id="scene-text"
-            class="text-input"
-            rows={3}
-            value={props.scene.text}
-            onInput={(e) => props.onChange({ text: e.currentTarget.value })}
-            placeholder="表示するテキストを入力..."
-          />
-        </fieldset>
-      )}
-
-      {props.scene.kind === 'scroll' && (
-        <SliderRow
-          id="scene-speed"
-          label="スクロール速度"
-          value={props.scene.speedPxPerSec}
-          min={1}
-          max={300}
-          step={1}
-          unit="px/s"
-          onChange={(v) => props.onChange({ speedPxPerSec: v })}
-        />
-      )}
-
-      {props.scene.kind === 'clock' && (
-        <fieldset class="field">
-          <legend class="field-label">フォーマット</legend>
+          <legend class="field-label">表示モード</legend>
           <div class="segmented">
-            <For each={CLOCK_FORMATS}>
+            <For each={SCENE_KINDS}>
               {(opt) => (
                 <button
                   type="button"
-                  aria-pressed={props.scene.clockFormat === opt.value}
+                  aria-pressed={props.scene.kind === opt.value}
                   class="segmented-option"
-                  classList={{
-                    'segmented-option--active': props.scene.clockFormat === opt.value,
-                  }}
-                  onClick={() => props.onChange({ clockFormat: opt.value })}
+                  classList={{ 'segmented-option--active': props.scene.kind === opt.value }}
+                  onClick={() => props.onChange({ kind: opt.value })}
                 >
                   {opt.label}
                 </button>
@@ -127,27 +70,84 @@ export const SceneEditor: Component<SceneEditorProps> = (props) => {
             </For>
           </div>
         </fieldset>
-      )}
 
-      <fieldset class="field">
-        <legend class="field-label">カラー</legend>
-        <div class="color-grid">
-          <For each={COLORS}>
-            {(c) => (
-              <button
-                type="button"
-                class="color-swatch"
-                classList={{ 'color-swatch--active': props.scene.color === c.value }}
-                style={{ '--swatch-color': c.cssVar }}
-                aria-label={c.label}
-                aria-pressed={props.scene.color === c.value}
-                title={c.label}
-                onClick={() => props.onChange({ color: c.value })}
-              />
-            )}
-          </For>
-        </div>
-      </fieldset>
+        {props.scene.kind !== 'clock' && (
+          <fieldset class="field">
+            <label class="field-label" for="scene-text">
+              テキスト
+            </label>
+            <textarea
+              id="scene-text"
+              class="text-input"
+              rows={3}
+              value={props.scene.text}
+              onInput={(e) => props.onChange({ text: e.currentTarget.value })}
+              placeholder="表示するテキストを入力..."
+            />
+          </fieldset>
+        )}
+
+        {props.scene.kind === 'scroll' && (
+          <SliderRow
+            id="scene-speed"
+            label="スクロール速度"
+            value={props.scene.speedPxPerSec}
+            min={1}
+            max={300}
+            step={1}
+            unit="px/s"
+            onChange={(v) => props.onChange({ speedPxPerSec: v })}
+          />
+        )}
+
+        {props.scene.kind === 'clock' && (
+          <fieldset class="field">
+            <legend class="field-label">フォーマット</legend>
+            <div class="segmented">
+              <For each={CLOCK_FORMATS}>
+                {(opt) => (
+                  <button
+                    type="button"
+                    aria-pressed={props.scene.clockFormat === opt.value}
+                    class="segmented-option"
+                    classList={{
+                      'segmented-option--active': props.scene.clockFormat === opt.value,
+                    }}
+                    onClick={() => props.onChange({ clockFormat: opt.value })}
+                  >
+                    {opt.label}
+                  </button>
+                )}
+              </For>
+            </div>
+          </fieldset>
+        )}
+
+        <fieldset class="field">
+          <legend class="field-label">LED カラー</legend>
+          <div class="led-bulb-strip">
+            <For each={COLORS}>
+              {(c) => (
+                <button
+                  type="button"
+                  class="led-bulb"
+                  classList={{ 'led-bulb--active': props.scene.color === c.value }}
+                  style={{ '--bulb-color': c.cssVar }}
+                  aria-pressed={props.scene.color === c.value}
+                  aria-label={c.label}
+                  title={c.label}
+                  onClick={() => props.onChange({ color: c.value })}
+                >
+                  <span class="led-bulb-glass" aria-hidden="true">
+                    <span class="led-bulb-glass-highlight" aria-hidden="true" />
+                  </span>
+                  <span class="led-bulb-code">{c.code}</span>
+                </button>
+              )}
+            </For>
+          </div>
+        </fieldset>
+      </div>
     </section>
   );
 };

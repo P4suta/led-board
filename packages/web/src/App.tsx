@@ -44,7 +44,26 @@ export const App: Component = () => {
     <div class="app" classList={{ 'app--fullscreen': fullscreen.isFullscreen() }}>
       <Show when={!fullscreen.isFullscreen()}>
         <header class="app-header">
-          <h1 class="app-title">LED 電光掲示板</h1>
+          <div class="app-header-brand">
+            <span class="status-led status-led--power" aria-hidden="true" />
+            <span class="status-led-label">PWR</span>
+            <div class="app-header-divider" aria-hidden="true" />
+            <div class="app-header-title-group">
+              <h1 class="app-title">LED 電光掲示板</h1>
+              <div class="app-header-meta">
+                <span>MODEL</span>
+                <strong>
+                  LED-{state.settings().board.cols}×{state.settings().board.rows}
+                </strong>
+                <span class="app-header-meta-sep">/</span>
+                <span>FONT</span>
+                <strong>{state.settings().board.fontName}</strong>
+                <span class="app-header-meta-sep">/</span>
+                <span>FW</span>
+                <strong>2026.04</strong>
+              </div>
+            </div>
+          </div>
           <div class="app-header-actions">
             <button
               type="button"
@@ -53,7 +72,21 @@ export const App: Component = () => {
               onClick={() => setHelpOpen(true)}
               title="キーボードショートカット (?)"
             >
-              ?
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
             </button>
             <FullscreenButton fullscreen={fullscreen} />
           </div>

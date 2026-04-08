@@ -23,32 +23,162 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
+  height: 64px;
   padding: 0 var(--space-5);
-  border-bottom: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
   background: linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--surface) 60%, transparent),
-    transparent
+    color-mix(in oklch, var(--surface-elevated) 90%, transparent),
+    color-mix(in oklch, var(--surface) 60%, transparent)
   );
+  border-bottom: 1px solid color-mix(in oklch, var(--border-strong) 70%, transparent);
+  /* Top hairline highlight + bottom shadow — like a brushed-metal front panel */
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--text-primary) 6%, transparent),
+    0 1px 0 oklch(0% 0 0 / 0.4);
   backdrop-filter: blur(8px);
 }
 
+.app-header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.app-header-divider {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in oklch, var(--border-strong) 80%, transparent),
+    transparent
+  );
+}
+
+.app-header-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
 .app-title {
+  font-family: var(--font-tech);
   font-size: var(--type-h1);
-  font-weight: 600;
+  font-weight: 700;
   margin: 0;
-  letter-spacing: -0.015em;
-  background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-primary);
+  text-shadow: 0 0 20px color-mix(in oklch, var(--accent) 30%, transparent);
+}
+
+.app-header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-tech);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.app-header-meta strong {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.app-header-meta-sep {
+  color: color-mix(in oklch, var(--text-muted) 40%, transparent);
+}
+
+@media (max-width: 768px) {
+  .app-header-meta {
+    display: none;
+  }
 }
 
 .app-header-actions {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+}
+
+/* ─── Status LED indicator dots ─────────────────────────────────────── */
+
+.status-led {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--status-off);
+  box-shadow:
+    inset 0 0 0 1px oklch(0% 0 0 / 0.4),
+    inset 0 1px 1px oklch(100% 0 0 / 0.15);
+  flex-shrink: 0;
+}
+
+.status-led--power {
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, var(--status-power) 100%, white 30%),
+    var(--status-power) 65%
+  );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--status-power) 60%, oklch(0% 0 0 / 0.4)),
+    0 0 4px color-mix(in oklch, var(--status-power) 70%, transparent),
+    0 0 12px color-mix(in oklch, var(--status-power) 35%, transparent);
+  animation: status-led-pulse 3s ease-in-out infinite;
+}
+
+.status-led--active {
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, var(--status-active) 100%, white 30%),
+    var(--status-active) 65%
+  );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--status-active) 60%, oklch(0% 0 0 / 0.4)),
+    0 0 4px color-mix(in oklch, var(--status-active) 70%, transparent),
+    0 0 12px color-mix(in oklch, var(--status-active) 35%, transparent);
+}
+
+.status-led--warn {
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, var(--status-warn) 100%, white 30%),
+    var(--status-warn) 65%
+  );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--status-warn) 60%, oklch(0% 0 0 / 0.4)),
+    0 0 4px color-mix(in oklch, var(--status-warn) 70%, transparent),
+    0 0 12px color-mix(in oklch, var(--status-warn) 35%, transparent);
+}
+
+@keyframes status-led-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-led--power {
+    animation: none;
+  }
+}
+
+.status-led-label {
+  font-family: var(--font-tech);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-widest);
+  color: var(--text-muted);
+  text-transform: uppercase;
 }
 
 .app-main {
@@ -164,45 +294,98 @@
   }
 }
 
-/* ─── Panel sections (cards) ────────────────────────────────────────── */
+/* ─── Panel sections (instrument modules) ──────────────────────────── */
 
 .panel-section {
   background: linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--surface-elevated) 100%, transparent),
-    color-mix(in oklch, var(--surface-elevated) 70%, transparent)
+    color-mix(in oklch, var(--surface-elevated) 96%, transparent),
+    color-mix(in oklch, var(--surface) 85%, transparent)
   );
-  border: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  border: 1px solid color-mix(in oklch, var(--border-strong) 55%, transparent);
+  border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  box-shadow: var(--shadow-1);
+  overflow: hidden;
+  /* Subtle hairline highlight + soft inset shadow → "etched panel" */
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--text-primary) 4%, transparent),
+    inset 0 -1px 0 oklch(0% 0 0 / 0.4),
+    var(--shadow-1);
+  position: relative;
+}
+
+/* Decorative "rivet" dots in the corners — purely visual hardware vibe */
+.panel-section::before,
+.panel-section::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    color-mix(in oklch, var(--text-muted) 45%, transparent),
+    oklch(0% 0 0 / 0.6) 80%
+  );
+  box-shadow: inset 0 0 0 0.5px oklch(0% 0 0 / 0.6);
+  pointer-events: none;
+}
+.panel-section::before {
+  top: 6px;
+  left: 6px;
+}
+.panel-section::after {
+  top: 6px;
+  right: 6px;
 }
 
 .panel-section-header {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-1);
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid color-mix(in oklch, var(--border) 40%, transparent);
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, oklch(0% 0 0) 35%, var(--surface)),
+    color-mix(in oklch, oklch(0% 0 0) 50%, var(--surface))
+  );
+  border-bottom: 1px solid color-mix(in oklch, var(--border-strong) 70%, transparent);
+  /* Inset shadow makes the strip feel recessed, like a label channel */
+  box-shadow:
+    inset 0 1px 2px oklch(0% 0 0 / 0.5),
+    inset 0 -1px 0 color-mix(in oklch, var(--text-primary) 5%, transparent);
 }
 
-.panel-section-icon {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  color: var(--accent);
+.panel-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-4) var(--space-4);
 }
 
 .panel-heading {
+  font-family: var(--font-tech);
   font-size: var(--type-h2);
-  font-weight: 600;
-  margin: 0;
-  color: var(--text-primary);
-  letter-spacing: -0.005em;
+  font-weight: 700;
+  margin: 0 0 0 var(--space-1);
+  color: color-mix(in oklch, var(--text-primary) 92%, var(--accent));
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  flex: 1;
+  text-shadow: 0 1px 0 oklch(0% 0 0 / 0.7);
+}
+
+.panel-section-id {
+  font-family: var(--font-tech);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid color-mix(in oklch, var(--border-strong) 50%, transparent);
+  border-radius: var(--radius-sm);
+  background: oklch(0% 0 0 / 0.3);
 }
 
 /* ─── Form fields ───────────────────────────────────────────────────── */
@@ -217,24 +400,28 @@
 }
 
 .field-label {
-  font-size: var(--type-small);
-  color: var(--text-secondary);
-  font-weight: 500;
+  font-family: var(--font-tech);
+  font-size: var(--type-micro);
+  color: var(--text-muted);
+  font-weight: 600;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: var(--space-2);
-  letter-spacing: 0.01em;
+  letter-spacing: var(--tracking-wider);
 }
 
 .value-badge {
-  font-family: var(--font-mono);
+  font-family: var(--font-tech);
   font-variant-numeric: tabular-nums;
   color: var(--text-primary);
-  background: var(--surface);
-  padding: 2px 8px;
+  background: oklch(0% 0 0 / 0.4);
+  border: 1px solid color-mix(in oklch, var(--border-strong) 60%, transparent);
+  padding: 2px 6px;
   border-radius: var(--radius-sm);
-  font-size: var(--type-micro);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-normal);
+  box-shadow: inset 0 1px 2px oklch(0% 0 0 / 0.5);
 }
 
 /* ─── Text input + textarea ─────────────────────────────────────────── */
@@ -276,77 +463,119 @@
 .range-input {
   flex: 1;
   min-width: 0;
-  height: 28px;
+  height: 32px;
   background: transparent;
   -webkit-appearance: none;
   appearance: none;
   cursor: pointer;
 }
 
-/* WebKit track */
+/* Hardware fader track — recessed channel */
 .range-input::-webkit-slider-runnable-track {
-  height: 6px;
+  height: 4px;
   background: linear-gradient(
     to right,
-    color-mix(in oklch, var(--accent) 40%, var(--surface)),
-    color-mix(in oklch, var(--accent) 70%, var(--surface))
+    color-mix(in oklch, var(--accent) 65%, oklch(8% 0 0)),
+    color-mix(in oklch, var(--accent) 30%, oklch(5% 0 0))
   );
   border-radius: var(--radius-full);
-  border: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
+  border: 1px solid oklch(0% 0 0 / 0.7);
+  box-shadow: inset 0 1px 1px oklch(0% 0 0 / 0.7);
 }
 
-/* WebKit thumb */
+.range-input::-moz-range-track {
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    color-mix(in oklch, var(--accent) 65%, oklch(8% 0 0)),
+    color-mix(in oklch, var(--accent) 30%, oklch(5% 0 0))
+  );
+  border-radius: var(--radius-full);
+  border: 1px solid oklch(0% 0 0 / 0.7);
+}
+
+/* Hardware fader thumb — chunky vertical cap with a horizontal grip line */
 .range-input::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
-  margin-top: -7px;
-  background: var(--accent);
-  border: 2px solid var(--bg);
-  border-radius: var(--radius-full);
+  width: 14px;
+  height: 24px;
+  margin-top: -11px;
+  background:
+    linear-gradient(
+      to right,
+      transparent 0%,
+      transparent 47%,
+      oklch(0% 0 0 / 0.6) 47%,
+      oklch(0% 0 0 / 0.6) 53%,
+      transparent 53%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--accent) 100%, white 20%),
+      var(--accent) 50%,
+      color-mix(in oklch, var(--accent) 70%, oklch(0% 0 0)) 100%
+    );
+  border: 1px solid oklch(0% 0 0 / 0.85);
+  border-radius: 3px;
   box-shadow:
-    0 1px 3px oklch(0% 0 0 / 0.5),
-    0 0 0 1px color-mix(in oklch, var(--accent) 40%, transparent);
-  transition: transform var(--dur-fast) var(--ease-standard);
+    inset 0 1px 0 oklch(100% 0 0 / 0.4),
+    inset 0 -1px 1px oklch(0% 0 0 / 0.4),
+    0 1px 3px oklch(0% 0 0 / 0.6),
+    0 0 8px color-mix(in oklch, var(--accent) 35%, transparent);
+  transition:
+    box-shadow var(--dur-fast) var(--ease-standard),
+    transform var(--dur-instant) var(--ease-standard);
 }
 
 .range-input::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
+  box-shadow:
+    inset 0 1px 0 oklch(100% 0 0 / 0.5),
+    inset 0 -1px 1px oklch(0% 0 0 / 0.4),
+    0 1px 4px oklch(0% 0 0 / 0.6),
+    0 0 14px color-mix(in oklch, var(--accent) 60%, transparent);
 }
 
 .range-input:active::-webkit-slider-thumb {
-  transform: scale(1.2);
-  background: var(--accent-hover);
+  transform: scaleY(1.06);
 }
 
-/* Firefox track */
-.range-input::-moz-range-track {
-  height: 6px;
-  background: linear-gradient(
-    to right,
-    color-mix(in oklch, var(--accent) 40%, var(--surface)),
-    color-mix(in oklch, var(--accent) 70%, var(--surface))
-  );
-  border-radius: var(--radius-full);
-  border: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
-}
-
-/* Firefox thumb */
 .range-input::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  background: var(--accent);
-  border: 2px solid var(--bg);
-  border-radius: var(--radius-full);
+  width: 14px;
+  height: 24px;
+  background:
+    linear-gradient(
+      to right,
+      transparent 0%,
+      transparent 47%,
+      oklch(0% 0 0 / 0.6) 47%,
+      oklch(0% 0 0 / 0.6) 53%,
+      transparent 53%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--accent) 100%, white 20%),
+      var(--accent) 50%,
+      color-mix(in oklch, var(--accent) 70%, oklch(0% 0 0)) 100%
+    );
+  border: 1px solid oklch(0% 0 0 / 0.85);
+  border-radius: 3px;
   box-shadow:
-    0 1px 3px oklch(0% 0 0 / 0.5),
-    0 0 0 1px color-mix(in oklch, var(--accent) 40%, transparent);
-  transition: transform var(--dur-fast) var(--ease-standard);
+    inset 0 1px 0 oklch(100% 0 0 / 0.4),
+    0 1px 3px oklch(0% 0 0 / 0.6),
+    0 0 8px color-mix(in oklch, var(--accent) 35%, transparent);
+  transition:
+    box-shadow var(--dur-fast) var(--ease-standard),
+    transform var(--dur-instant) var(--ease-standard);
 }
 
 .range-input::-moz-range-thumb:hover {
-  transform: scale(1.15);
+  box-shadow:
+    inset 0 1px 0 oklch(100% 0 0 / 0.5),
+    0 1px 4px oklch(0% 0 0 / 0.6),
+    0 0 14px color-mix(in oklch, var(--accent) 60%, transparent);
 }
 
 .range-input:focus-visible {
@@ -404,35 +633,58 @@
   letter-spacing: 0.04em;
 }
 
-/* ─── Segmented control ─────────────────────────────────────────────── */
+/* ─── Segmented control (instrument-style buttons) ──────────────────── */
 
 .segmented {
   display: flex;
-  background: var(--surface);
-  border: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
+  background: linear-gradient(to bottom, oklch(0% 0 0 / 0.55), oklch(0% 0 0 / 0.3));
+  border: 1px solid color-mix(in oklch, var(--border-strong) 60%, transparent);
   border-radius: var(--radius-md);
   padding: 3px;
   gap: 2px;
+  box-shadow:
+    inset 0 1px 2px oklch(0% 0 0 / 0.6),
+    inset 0 -1px 0 color-mix(in oklch, var(--text-primary) 4%, transparent);
 }
 
 .segmented-option {
   flex: 1;
   padding: var(--space-2) var(--space-3);
-  background: transparent;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--surface-elevated) 70%, transparent),
+    color-mix(in oklch, var(--surface) 50%, transparent)
+  );
   color: var(--text-secondary);
-  border-radius: calc(var(--radius-md) - 3px);
-  font-size: var(--type-small);
-  font-weight: 500;
+  border: 1px solid color-mix(in oklch, var(--border-strong) 30%, transparent);
+  border-radius: calc(var(--radius-md) - 4px);
+  font-family: var(--font-tech);
+  font-size: var(--type-micro);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
   min-height: 36px;
+  display: grid;
+  place-items: center;
   transition:
     background var(--dur-fast) var(--ease-standard),
     color var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-fast) var(--ease-standard),
     transform var(--dur-instant) var(--ease-standard);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--text-primary) 5%, transparent),
+    0 1px 0 oklch(0% 0 0 / 0.4);
 }
 
 .segmented-option:hover {
-  background: color-mix(in oklch, var(--accent) 8%, transparent);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--accent) 12%, var(--surface-elevated)),
+    color-mix(in oklch, var(--accent) 6%, var(--surface))
+  );
   color: var(--text-primary);
+  border-color: color-mix(in oklch, var(--accent) 40%, var(--border-strong));
 }
 
 .segmented-option:active {
@@ -442,66 +694,369 @@
 .segmented-option--active {
   background: linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--accent) 100%, transparent),
-    color-mix(in oklch, var(--accent-hover) 100%, transparent)
+    color-mix(in oklch, var(--accent) 100%, white 8%),
+    var(--accent) 60%,
+    color-mix(in oklch, var(--accent) 80%, oklch(0% 0 0)) 100%
   );
   color: var(--bg);
+  border-color: oklch(0% 0 0 / 0.7);
   box-shadow:
-    0 1px 3px oklch(0% 0 0 / 0.4),
-    0 0 0 1px color-mix(in oklch, var(--accent) 30%, transparent);
+    inset 0 1px 0 oklch(100% 0 0 / 0.4),
+    inset 0 -1px 1px oklch(0% 0 0 / 0.3),
+    0 0 12px color-mix(in oklch, var(--accent) 40%, transparent);
 }
 
 .segmented-option--active:hover {
   color: var(--bg);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--accent-hover) 100%, white 10%),
+    var(--accent-hover) 60%,
+    color-mix(in oklch, var(--accent) 80%, oklch(0% 0 0)) 100%
+  );
 }
 
-/* ─── Color swatches ────────────────────────────────────────────────── */
+/* Tall variant for the dot-shape picker — gives the visual sample dot more room */
+.segmented--tall .segmented-option {
+  min-height: 56px;
+  padding: var(--space-3);
+}
 
-.color-grid {
+.dot-shape-option .dot-shape-sample {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, currentColor 100%, white 30%),
+    currentColor 60%,
+    color-mix(in oklch, currentColor 50%, oklch(0% 0 0)) 100%
+  );
+  box-shadow:
+    inset 0 1px 1px oklch(100% 0 0 / 0.3),
+    0 0 8px color-mix(in oklch, currentColor 50%, transparent);
+}
+
+/* ─── Board size preset gallery ─────────────────────────────────────── */
+
+/* The user picks a real-world board "model" rather than typing numbers.
+ * Each preset shows the actual aspect ratio as a tiny mini-board so they
+ * can see the proportions before committing.
+ */
+
+.board-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: oklch(0% 0 0 / 0.3);
+  border: 1px solid color-mix(in oklch, var(--border-strong) 50%, transparent);
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 1px 2px oklch(0% 0 0 / 0.5);
+}
+
+.board-preset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-3) var(--space-2);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--surface-elevated) 80%, transparent),
+    color-mix(in oklch, var(--surface) 60%, transparent)
+  );
+  border: 1px solid color-mix(in oklch, var(--border-strong) 60%, transparent);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-instant) var(--ease-standard);
+  /* Subtle inset highlight + shadow → button-like */
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--text-primary) 5%, transparent),
+    0 1px 0 oklch(0% 0 0 / 0.4);
+}
+
+.board-preset:hover {
+  border-color: color-mix(in oklch, var(--accent) 50%, var(--border-strong));
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--accent) 8%, var(--surface-elevated)),
+    color-mix(in oklch, var(--accent) 4%, var(--surface))
+  );
+}
+
+.board-preset:active {
+  transform: scale(0.98);
+}
+
+.board-preset:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.board-preset--active {
+  border-color: var(--accent);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--accent) 18%, var(--surface-elevated)),
+    color-mix(in oklch, var(--accent) 10%, var(--surface))
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--accent) 30%, transparent),
+    0 0 0 1px color-mix(in oklch, var(--accent) 60%, transparent),
+    0 0 12px color-mix(in oklch, var(--accent) 25%, transparent);
+}
+
+/* Mini board thumbnail — shows the actual aspect ratio */
+.board-preset-thumb {
+  width: 100%;
+  max-width: 80px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 2px;
+}
+
+.board-preset-thumb-inner {
+  display: block;
+  width: 100%;
+  max-height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklch, var(--accent) 55%, oklch(8% 0 0)),
+    color-mix(in oklch, var(--accent) 25%, oklch(5% 0 0)) 70%,
+    oklch(3% 0 0) 100%
+  );
+  border: 1px solid oklch(0% 0 0 / 0.7);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--accent) 20%, oklch(0% 0 0 / 0.5)),
+    inset 0 0 6px oklch(0% 0 0 / 0.6);
+}
+
+.board-preset--active .board-preset-thumb-inner {
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklch, var(--accent) 100%, white 25%),
+    var(--accent) 60%,
+    color-mix(in oklch, var(--accent) 50%, oklch(0% 0 0)) 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--accent) 80%, white),
+    0 0 8px color-mix(in oklch, var(--accent) 60%, transparent);
+}
+
+.board-preset-label {
+  font-family: var(--font-tech);
+  font-size: var(--type-small);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.board-preset-spec {
+  font-family: var(--font-tech);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.board-preset--active .board-preset-spec {
+  color: var(--accent);
+}
+
+.board-preset-desc {
+  font-size: var(--type-nano);
+  color: var(--text-muted);
+  letter-spacing: var(--tracking-normal);
+}
+
+/* ─── Fine-tune disclosure ──────────────────────────────────────────── */
+
+.fine-tune-disclosure {
+  border: 1px solid color-mix(in oklch, var(--border-strong) 40%, transparent);
+  border-radius: var(--radius-md);
+  background: oklch(0% 0 0 / 0.15);
+  overflow: hidden;
+}
+
+.fine-tune-disclosure summary {
+  list-style: none;
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-tech);
+  font-size: var(--type-micro);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  user-select: none;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+
+.fine-tune-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.fine-tune-disclosure summary:hover {
+  color: var(--text-secondary);
+}
+
+.fine-tune-arrow {
+  display: inline-block;
+  font-size: var(--type-small);
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+
+.fine-tune-disclosure[open] .fine-tune-arrow {
+  transform: rotate(180deg);
+}
+
+.fine-tune-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-top: 1px solid color-mix(in oklch, var(--border-strong) 40%, transparent);
+  background: oklch(0% 0 0 / 0.2);
+}
+
+/* ─── LED bulb picker ───────────────────────────────────────────────── */
+
+/* The color picker is conceptually "select which physical LED bulb is on".
+ * Only the active bulb is lit (bright + halo glow); the rest sit dim like
+ * unpowered bulbs. Each bulb has a black "socket" bezel + a round glass dome.
+ */
+
+.led-bulb-strip {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: var(--space-2);
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-2);
+  background: linear-gradient(to bottom, oklch(0% 0 0 / 0.4), oklch(0% 0 0 / 0.25));
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklch, var(--border-strong) 50%, transparent);
+  box-shadow:
+    inset 0 1px 2px oklch(0% 0 0 / 0.6),
+    inset 0 -1px 0 color-mix(in oklch, var(--text-primary) 4%, transparent);
 }
 
-.color-swatch {
-  aspect-ratio: 1;
-  background: radial-gradient(
-    circle at 30% 30%,
-    color-mix(in oklch, var(--swatch-color, var(--accent)) 100%, white 25%),
-    var(--swatch-color, var(--accent)) 70%
-  );
-  border: 2px solid color-mix(in oklch, var(--swatch-color, var(--accent)) 60%, transparent);
-  border-radius: var(--radius-full);
-  min-width: 40px;
-  min-height: 40px;
+.led-bulb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  position: relative;
-  transition:
-    transform var(--dur-fast) var(--ease-standard),
-    box-shadow var(--dur-fast) var(--ease-standard);
-  box-shadow:
-    inset 0 1px 2px oklch(100% 0 0 / 0.2),
-    0 2px 6px color-mix(in oklch, var(--swatch-color, var(--accent)) 40%, transparent);
+  padding: var(--space-2) 0;
+  border-radius: var(--radius-sm);
+  transition: background var(--dur-fast) var(--ease-standard);
 }
 
-.color-swatch:hover {
-  transform: scale(1.08);
-  box-shadow:
-    inset 0 1px 2px oklch(100% 0 0 / 0.3),
-    0 4px 14px color-mix(in oklch, var(--swatch-color, var(--accent)) 60%, transparent);
+.led-bulb:hover {
+  background: oklch(0% 0 0 / 0.25);
 }
 
-.color-swatch--active {
-  box-shadow:
-    inset 0 1px 2px oklch(100% 0 0 / 0.4),
-    0 0 0 3px var(--bg),
-    0 0 0 5px var(--swatch-color, var(--accent)),
-    0 4px 16px color-mix(in oklch, var(--swatch-color, var(--accent)) 70%, transparent);
-}
-
-.color-swatch:focus-visible {
+.led-bulb:focus-visible {
   outline: 2px solid var(--focus-ring);
-  outline-offset: 4px;
+  outline-offset: 1px;
+}
+
+/* The "socket" — black ring around each bulb */
+.led-bulb-glass {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  position: relative;
+  /* Off state: dark with a hint of the bulb's color */
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, var(--bulb-color, var(--accent)) 22%, oklch(7% 0 0)),
+    oklch(4% 0 0) 78%
+  );
+  border: 1.5px solid oklch(0% 0 0 / 0.85);
+  box-shadow:
+    inset 0 1px 1px oklch(100% 0 0 / 0.06),
+    inset 0 -1px 2px oklch(0% 0 0 / 0.7),
+    0 1px 2px oklch(0% 0 0 / 0.6),
+    0 0 0 1px oklch(0% 0 0 / 0.5);
+  transition:
+    background var(--dur-standard) var(--ease-standard),
+    box-shadow var(--dur-standard) var(--ease-standard);
+}
+
+/* Tiny specular highlight on the dome — same on/off, just visible */
+.led-bulb-glass-highlight {
+  position: absolute;
+  top: 4px;
+  left: 7px;
+  width: 8px;
+  height: 5px;
+  border-radius: 50%;
+  background: oklch(100% 0 0 / 0.18);
+  filter: blur(0.5px);
+  transition: opacity var(--dur-standard) var(--ease-standard);
+}
+
+/* Lit state: bright color with strong halo glow */
+.led-bulb--active .led-bulb-glass {
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, var(--bulb-color) 100%, white 50%),
+    var(--bulb-color) 55%,
+    color-mix(in oklch, var(--bulb-color) 75%, oklch(0% 0 0)) 100%
+  );
+  box-shadow:
+    inset 0 1px 2px oklch(100% 0 0 / 0.45),
+    inset 0 -1px 2px color-mix(in oklch, var(--bulb-color) 40%, oklch(0% 0 0)),
+    0 0 0 1px oklch(0% 0 0 / 0.5),
+    0 0 12px var(--bulb-color),
+    0 0 28px color-mix(in oklch, var(--bulb-color) 55%, transparent),
+    0 0 48px color-mix(in oklch, var(--bulb-color) 25%, transparent);
+}
+
+.led-bulb--active .led-bulb-glass-highlight {
+  opacity: 0.7;
+}
+
+/* Subtle pulse to make the active bulb feel alive — disabled in
+ * reduced-motion mode and very gentle (3% brightness) so it doesn't
+ * pull focus from the LED board. */
+@media (prefers-reduced-motion: no-preference) {
+  .led-bulb--active .led-bulb-glass {
+    animation: led-bulb-flicker 4s ease-in-out infinite;
+  }
+}
+@keyframes led-bulb-flicker {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.06);
+  }
+}
+
+.led-bulb-code {
+  font-family: var(--font-tech);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+
+.led-bulb--active .led-bulb-code {
+  color: color-mix(in oklch, var(--bulb-color) 80%, white 20%);
+  text-shadow: 0 0 6px color-mix(in oklch, var(--bulb-color) 60%, transparent);
 }
 
 /* ─── Icon button ───────────────────────────────────────────────────── */
