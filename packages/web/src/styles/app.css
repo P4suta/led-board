@@ -1,0 +1,313 @@
+/* app.css — top-level layout */
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100dvh;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.app-title {
+  font-size: var(--type-h1);
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.app-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.app-main {
+  display: grid;
+  grid-template-columns: minmax(280px, 22vw) 1fr;
+  min-height: 0;
+}
+
+.app--fullscreen .app-main {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+}
+
+.app-placeholder {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-small);
+}
+
+/* ─── Board ─────────────────────────────────────────────────────────── */
+
+.board-stage {
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  min-width: 0;
+}
+
+.board-wrap {
+  width: 100%;
+  max-width: min(100%, 1280px);
+  aspect-ratio: 8 / 1;
+  background: oklch(8% 0.01 240);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow:
+    inset 0 0 0 4px oklch(6% 0 0),
+    var(--shadow-2);
+  overflow: hidden;
+  display: block;
+}
+
+.app--fullscreen .board-wrap {
+  max-width: 100vw;
+  max-height: 100vh;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.board-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Control panel ─────────────────────────────────────────────────── */
+
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-5);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .control-panel {
+    border-right: none;
+    border-top: 1px solid var(--border);
+    max-height: 60vh;
+  }
+}
+
+.panel-heading {
+  font-size: var(--type-h2);
+  font-weight: 600;
+  margin: 0 0 var(--space-3) 0;
+  color: var(--text-primary);
+  letter-spacing: -0.005em;
+}
+
+/* ─── Form controls ─────────────────────────────────────────────────── */
+
+.field {
+  border: none;
+  padding: 0;
+  margin: 0 0 var(--space-4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.field-label {
+  font-size: var(--type-small);
+  color: var(--text-secondary);
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.value-badge {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  background: var(--surface-elevated);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: var(--type-micro);
+}
+
+.text-input {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--type-body);
+  min-height: 44px;
+  resize: vertical;
+}
+
+.text-input:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-color: var(--border-strong);
+}
+
+.range-input {
+  width: 100%;
+  height: 32px;
+  accent-color: var(--accent);
+}
+
+.segmented {
+  display: flex;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 2px;
+  gap: 2px;
+}
+
+.segmented-option {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: calc(var(--radius-md) - 2px);
+  font-size: var(--type-small);
+  font-weight: 500;
+  min-height: 36px;
+  transition: background var(--dur-fast) var(--ease-standard);
+}
+
+.segmented-option:hover {
+  background: color-mix(in oklch, var(--accent) 10%, transparent);
+}
+
+.segmented-option--active {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-2);
+}
+
+.color-swatch {
+  aspect-ratio: 1;
+  background: var(--swatch-color, var(--accent));
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  min-width: 36px;
+  min-height: 36px;
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+
+.color-swatch:hover {
+  transform: scale(1.05);
+}
+
+.color-swatch--active {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* ─── Icon button ───────────────────────────────────────────────────── */
+
+.icon-button {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  transition:
+    background var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard);
+}
+
+.icon-button:hover {
+  background: color-mix(in oklch, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
+.icon-button[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+/* ─── Keyboard help dialog ──────────────────────────────────────────── */
+
+.keyboard-help {
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  max-width: 480px;
+  width: 90vw;
+  box-shadow: var(--shadow-3);
+}
+
+.keyboard-help::backdrop {
+  background: oklch(0% 0 0 / 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.keyboard-help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.keyboard-help-header .panel-heading {
+  margin: 0;
+}
+
+.keyboard-help-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.keyboard-help-table td {
+  padding: var(--space-2) var(--space-1);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--type-body);
+}
+
+.keyboard-help-table td:first-child {
+  display: flex;
+  gap: var(--space-1);
+  width: 30%;
+}
+
+.kbd {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--type-small);
+  color: var(--text-primary);
+  min-width: 24px;
+  text-align: center;
+}
