@@ -2,6 +2,7 @@ import { type Component, For } from 'solid-js';
 import type { DotShape } from '../canvas/sprite-atlas';
 import type { FontName } from '../font/loader';
 import type { BoardConfig } from '../state/types';
+import { BoardSizePicker } from './BoardSizePicker';
 import { SliderRow } from './SliderRow';
 
 export interface BoardConfigPanelProps {
@@ -29,27 +30,42 @@ export const BoardConfigPanel: Component<BoardConfigPanelProps> = (props) => {
         <span class="panel-section-id">BRD-01</span>
       </header>
       <div class="panel-section-body">
-      <SliderRow
-        id="cfg-cols"
-        label="幅 (横方向 ↔)"
-        value={props.config.cols}
-        min={8}
-        max={256}
-        step={1}
-        unit="ドット"
-        onChange={(v) => props.onChange({ cols: v })}
+      <BoardSizePicker
+        cols={props.config.cols}
+        rows={props.config.rows}
+        onChange={(size) => props.onChange({ cols: size.cols, rows: size.rows })}
       />
 
-      <SliderRow
-        id="cfg-rows"
-        label="高さ (縦方向 ↕)"
-        value={props.config.rows}
-        min={8}
-        max={128}
-        step={1}
-        unit="ドット"
-        onChange={(v) => props.onChange({ rows: v })}
-      />
+      <details class="fine-tune-disclosure">
+        <summary>
+          <span>微調整</span>
+          <span class="fine-tune-arrow" aria-hidden="true">
+            ▾
+          </span>
+        </summary>
+        <div class="fine-tune-content">
+          <SliderRow
+            id="cfg-cols"
+            label="幅 (横ドット数 ↔)"
+            value={props.config.cols}
+            min={8}
+            max={256}
+            step={1}
+            unit="ドット"
+            onChange={(v) => props.onChange({ cols: v })}
+          />
+          <SliderRow
+            id="cfg-rows"
+            label="高さ (縦ドット数 ↕)"
+            value={props.config.rows}
+            min={8}
+            max={128}
+            step={1}
+            unit="ドット"
+            onChange={(v) => props.onChange({ rows: v })}
+          />
+        </div>
+      </details>
 
       <fieldset class="field">
         <legend class="field-label">ドット形状</legend>

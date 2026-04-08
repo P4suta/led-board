@@ -638,6 +638,197 @@
   color: var(--bg);
 }
 
+/* ─── Board size preset gallery ─────────────────────────────────────── */
+
+/* The user picks a real-world board "model" rather than typing numbers.
+ * Each preset shows the actual aspect ratio as a tiny mini-board so they
+ * can see the proportions before committing.
+ */
+
+.board-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: oklch(0% 0 0 / 0.3);
+  border: 1px solid color-mix(in oklch, var(--border-strong) 50%, transparent);
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 1px 2px oklch(0% 0 0 / 0.5);
+}
+
+.board-preset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-3) var(--space-2);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--surface-elevated) 80%, transparent),
+    color-mix(in oklch, var(--surface) 60%, transparent)
+  );
+  border: 1px solid color-mix(in oklch, var(--border-strong) 60%, transparent);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-instant) var(--ease-standard);
+  /* Subtle inset highlight + shadow → button-like */
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--text-primary) 5%, transparent),
+    0 1px 0 oklch(0% 0 0 / 0.4);
+}
+
+.board-preset:hover {
+  border-color: color-mix(in oklch, var(--accent) 50%, var(--border-strong));
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--accent) 8%, var(--surface-elevated)),
+    color-mix(in oklch, var(--accent) 4%, var(--surface))
+  );
+}
+
+.board-preset:active {
+  transform: scale(0.98);
+}
+
+.board-preset:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.board-preset--active {
+  border-color: var(--accent);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--accent) 18%, var(--surface-elevated)),
+    color-mix(in oklch, var(--accent) 10%, var(--surface))
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--accent) 30%, transparent),
+    0 0 0 1px color-mix(in oklch, var(--accent) 60%, transparent),
+    0 0 12px color-mix(in oklch, var(--accent) 25%, transparent);
+}
+
+/* Mini board thumbnail — shows the actual aspect ratio */
+.board-preset-thumb {
+  width: 100%;
+  max-width: 80px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 2px;
+}
+
+.board-preset-thumb-inner {
+  display: block;
+  width: 100%;
+  max-height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklch, var(--accent) 55%, oklch(8% 0 0)),
+    color-mix(in oklch, var(--accent) 25%, oklch(5% 0 0)) 70%,
+    oklch(3% 0 0) 100%
+  );
+  border: 1px solid oklch(0% 0 0 / 0.7);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--accent) 20%, oklch(0% 0 0 / 0.5)),
+    inset 0 0 6px oklch(0% 0 0 / 0.6);
+}
+
+.board-preset--active .board-preset-thumb-inner {
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklch, var(--accent) 100%, white 25%),
+    var(--accent) 60%,
+    color-mix(in oklch, var(--accent) 50%, oklch(0% 0 0)) 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--accent) 80%, white),
+    0 0 8px color-mix(in oklch, var(--accent) 60%, transparent);
+}
+
+.board-preset-label {
+  font-family: var(--font-tech);
+  font-size: var(--type-small);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.board-preset-spec {
+  font-family: var(--font-tech);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.board-preset--active .board-preset-spec {
+  color: var(--accent);
+}
+
+.board-preset-desc {
+  font-size: var(--type-nano);
+  color: var(--text-muted);
+  letter-spacing: var(--tracking-normal);
+}
+
+/* ─── Fine-tune disclosure ──────────────────────────────────────────── */
+
+.fine-tune-disclosure {
+  border: 1px solid color-mix(in oklch, var(--border-strong) 40%, transparent);
+  border-radius: var(--radius-md);
+  background: oklch(0% 0 0 / 0.15);
+  overflow: hidden;
+}
+
+.fine-tune-disclosure summary {
+  list-style: none;
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-tech);
+  font-size: var(--type-micro);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  user-select: none;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+
+.fine-tune-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.fine-tune-disclosure summary:hover {
+  color: var(--text-secondary);
+}
+
+.fine-tune-arrow {
+  display: inline-block;
+  font-size: var(--type-small);
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+
+.fine-tune-disclosure[open] .fine-tune-arrow {
+  transform: rotate(180deg);
+}
+
+.fine-tune-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-top: 1px solid color-mix(in oklch, var(--border-strong) 40%, transparent);
+  background: oklch(0% 0 0 / 0.2);
+}
+
 /* ─── LED bulb picker ───────────────────────────────────────────────── */
 
 /* The color picker is conceptually "select which physical LED bulb is on".
