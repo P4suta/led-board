@@ -33,8 +33,30 @@ const CLOCK_FORMATS: ReadonlyArray<{ value: ClockFormat; label: string }> = [
 
 export const SceneEditor: Component<SceneEditorProps> = (props) => {
   return (
-    <div class="scene-editor">
-      <h2 class="panel-heading">シーン編集</h2>
+    <section class="panel-section">
+      <header class="panel-section-header">
+        <svg
+          class="panel-section-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="2" y="6" width="20" height="12" rx="1.5" />
+          <circle cx="6.5" cy="11" r="0.6" fill="currentColor" />
+          <circle cx="9.5" cy="11" r="0.6" fill="currentColor" />
+          <circle cx="12.5" cy="11" r="0.6" fill="currentColor" />
+          <circle cx="15.5" cy="11" r="0.6" fill="currentColor" />
+          <circle cx="6.5" cy="14" r="0.6" fill="currentColor" />
+          <circle cx="9.5" cy="14" r="0.6" fill="currentColor" />
+          <circle cx="12.5" cy="14" r="0.6" fill="currentColor" />
+          <circle cx="15.5" cy="14" r="0.6" fill="currentColor" />
+        </svg>
+        <h2 class="panel-heading">シーン</h2>
+      </header>
 
       <fieldset class="field">
         <legend class="field-label">表示モード</legend>
@@ -119,12 +141,13 @@ export const SceneEditor: Component<SceneEditorProps> = (props) => {
                 style={{ '--swatch-color': c.cssVar }}
                 aria-label={c.label}
                 aria-pressed={props.scene.color === c.value}
+                title={c.label}
                 onClick={() => props.onChange({ color: c.value })}
               />
             )}
           </For>
         </div>
       </fieldset>
-    </div>
+    </section>
   );
 };
