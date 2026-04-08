@@ -638,53 +638,139 @@
   color: var(--bg);
 }
 
-/* ─── Color swatches ────────────────────────────────────────────────── */
+/* ─── LED bulb picker ───────────────────────────────────────────────── */
 
-.color-grid {
+/* The color picker is conceptually "select which physical LED bulb is on".
+ * Only the active bulb is lit (bright + halo glow); the rest sit dim like
+ * unpowered bulbs. Each bulb has a black "socket" bezel + a round glass dome.
+ */
+
+.led-bulb-strip {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: var(--space-2);
-}
-
-.color-swatch {
-  aspect-ratio: 1;
-  background: radial-gradient(
-    circle at 30% 30%,
-    color-mix(in oklch, var(--swatch-color, var(--accent)) 100%, white 25%),
-    var(--swatch-color, var(--accent)) 70%
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-2);
+  background: linear-gradient(
+    to bottom,
+    oklch(0% 0 0 / 0.4),
+    oklch(0% 0 0 / 0.25)
   );
-  border: 2px solid color-mix(in oklch, var(--swatch-color, var(--accent)) 60%, transparent);
-  border-radius: var(--radius-full);
-  min-width: 40px;
-  min-height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklch, var(--border-strong) 50%, transparent);
+  box-shadow:
+    inset 0 1px 2px oklch(0% 0 0 / 0.6),
+    inset 0 -1px 0 color-mix(in oklch, var(--text-primary) 4%, transparent);
+}
+
+.led-bulb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  position: relative;
-  transition:
-    transform var(--dur-fast) var(--ease-standard),
-    box-shadow var(--dur-fast) var(--ease-standard);
-  box-shadow:
-    inset 0 1px 2px oklch(100% 0 0 / 0.2),
-    0 2px 6px color-mix(in oklch, var(--swatch-color, var(--accent)) 40%, transparent);
+  padding: var(--space-2) 0;
+  border-radius: var(--radius-sm);
+  transition: background var(--dur-fast) var(--ease-standard);
 }
 
-.color-swatch:hover {
-  transform: scale(1.08);
-  box-shadow:
-    inset 0 1px 2px oklch(100% 0 0 / 0.3),
-    0 4px 14px color-mix(in oklch, var(--swatch-color, var(--accent)) 60%, transparent);
+.led-bulb:hover {
+  background: oklch(0% 0 0 / 0.25);
 }
 
-.color-swatch--active {
-  box-shadow:
-    inset 0 1px 2px oklch(100% 0 0 / 0.4),
-    0 0 0 3px var(--bg),
-    0 0 0 5px var(--swatch-color, var(--accent)),
-    0 4px 16px color-mix(in oklch, var(--swatch-color, var(--accent)) 70%, transparent);
-}
-
-.color-swatch:focus-visible {
+.led-bulb:focus-visible {
   outline: 2px solid var(--focus-ring);
-  outline-offset: 4px;
+  outline-offset: 1px;
+}
+
+/* The "socket" — black ring around each bulb */
+.led-bulb-glass {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  position: relative;
+  /* Off state: dark with a hint of the bulb's color */
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, var(--bulb-color, var(--accent)) 22%, oklch(7% 0 0)),
+    oklch(4% 0 0) 78%
+  );
+  border: 1.5px solid oklch(0% 0 0 / 0.85);
+  box-shadow:
+    inset 0 1px 1px oklch(100% 0 0 / 0.06),
+    inset 0 -1px 2px oklch(0% 0 0 / 0.7),
+    0 1px 2px oklch(0% 0 0 / 0.6),
+    0 0 0 1px oklch(0% 0 0 / 0.5);
+  transition:
+    background var(--dur-standard) var(--ease-standard),
+    box-shadow var(--dur-standard) var(--ease-standard);
+}
+
+/* Tiny specular highlight on the dome — same on/off, just visible */
+.led-bulb-glass-highlight {
+  position: absolute;
+  top: 4px;
+  left: 7px;
+  width: 8px;
+  height: 5px;
+  border-radius: 50%;
+  background: oklch(100% 0 0 / 0.18);
+  filter: blur(0.5px);
+  transition: opacity var(--dur-standard) var(--ease-standard);
+}
+
+/* Lit state: bright color with strong halo glow */
+.led-bulb--active .led-bulb-glass {
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in oklch, var(--bulb-color) 100%, white 50%),
+    var(--bulb-color) 55%,
+    color-mix(in oklch, var(--bulb-color) 75%, oklch(0% 0 0)) 100%
+  );
+  box-shadow:
+    inset 0 1px 2px oklch(100% 0 0 / 0.45),
+    inset 0 -1px 2px color-mix(in oklch, var(--bulb-color) 40%, oklch(0% 0 0)),
+    0 0 0 1px oklch(0% 0 0 / 0.5),
+    0 0 12px var(--bulb-color),
+    0 0 28px color-mix(in oklch, var(--bulb-color) 55%, transparent),
+    0 0 48px color-mix(in oklch, var(--bulb-color) 25%, transparent);
+}
+
+.led-bulb--active .led-bulb-glass-highlight {
+  opacity: 0.7;
+}
+
+/* Subtle pulse to make the active bulb feel alive — disabled in
+ * reduced-motion mode and very gentle (3% brightness) so it doesn't
+ * pull focus from the LED board. */
+@media (prefers-reduced-motion: no-preference) {
+  .led-bulb--active .led-bulb-glass {
+    animation: led-bulb-flicker 4s ease-in-out infinite;
+  }
+}
+@keyframes led-bulb-flicker {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.06);
+  }
+}
+
+.led-bulb-code {
+  font-family: var(--font-tech);
+  font-size: var(--type-nano);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+
+.led-bulb--active .led-bulb-code {
+  color: color-mix(in oklch, var(--bulb-color) 80%, white 20%);
+  text-shadow: 0 0 6px color-mix(in oklch, var(--bulb-color) 60%, transparent);
 }
 
 /* ─── Icon button ───────────────────────────────────────────────────── */

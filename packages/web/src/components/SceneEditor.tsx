@@ -15,13 +15,25 @@ const SCENE_KINDS: ReadonlyArray<{ value: EditableSceneKind; label: string }> = 
   { value: 'clock', label: '時計' },
 ];
 
-const COLORS: ReadonlyArray<{ value: LedColorName; label: string; cssVar: string }> = [
-  { value: 'red', label: '赤', cssVar: 'var(--led-red)' },
-  { value: 'amber', label: 'アンバー', cssVar: 'var(--led-amber)' },
-  { value: 'jr-orange', label: 'JR橙', cssVar: 'var(--led-jr-orange)' },
-  { value: 'green', label: '緑', cssVar: 'var(--led-green)' },
-  { value: 'blue', label: '青', cssVar: 'var(--led-blue)' },
-  { value: 'white', label: '白', cssVar: 'var(--led-white)' },
+interface LedBulbDef {
+  readonly value: LedColorName;
+  readonly label: string;
+  readonly code: string;
+  readonly cssVar: string;
+}
+
+const COLORS: ReadonlyArray<LedBulbDef> = [
+  { value: 'red', label: '赤 (Red)', code: 'RED', cssVar: 'var(--led-red)' },
+  { value: 'amber', label: 'アンバー (Amber)', code: 'AMB', cssVar: 'var(--led-amber)' },
+  {
+    value: 'jr-orange',
+    label: 'JR 橙 (JR Orange)',
+    code: 'JR',
+    cssVar: 'var(--led-jr-orange)',
+  },
+  { value: 'green', label: '緑 (Green)', code: 'GRN', cssVar: 'var(--led-green)' },
+  { value: 'blue', label: '青 (Blue)', code: 'BLU', cssVar: 'var(--led-blue)' },
+  { value: 'white', label: '白 (White)', code: 'WHT', cssVar: 'var(--led-white)' },
 ];
 
 const CLOCK_FORMATS: ReadonlyArray<{ value: ClockFormat; label: string }> = [
@@ -112,20 +124,25 @@ export const SceneEditor: Component<SceneEditorProps> = (props) => {
       )}
 
       <fieldset class="field">
-        <legend class="field-label">カラー</legend>
-        <div class="color-grid">
+        <legend class="field-label">LED カラー</legend>
+        <div class="led-bulb-strip">
           <For each={COLORS}>
             {(c) => (
               <button
                 type="button"
-                class="color-swatch"
-                classList={{ 'color-swatch--active': props.scene.color === c.value }}
-                style={{ '--swatch-color': c.cssVar }}
-                aria-label={c.label}
+                class="led-bulb"
+                classList={{ 'led-bulb--active': props.scene.color === c.value }}
+                style={{ '--bulb-color': c.cssVar }}
                 aria-pressed={props.scene.color === c.value}
+                aria-label={c.label}
                 title={c.label}
                 onClick={() => props.onChange({ color: c.value })}
-              />
+              >
+                <span class="led-bulb-glass" aria-hidden="true">
+                  <span class="led-bulb-glass-highlight" aria-hidden="true" />
+                </span>
+                <span class="led-bulb-code">{c.code}</span>
+              </button>
             )}
           </For>
         </div>
