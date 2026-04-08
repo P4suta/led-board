@@ -9,6 +9,14 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
+# Force JavaScript actions to run on Node.js 24 — silences the deprecation
+# warning that fires for transitive dependencies of actions/upload-pages-artifact
+# which still pin upload-artifact at a SHA built on Node 20 (as of April 2026).
+# Once GitHub publishes a refreshed upload-pages-artifact this can be removed.
+# Reference: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 permissions:
   contents: read
   pages: write

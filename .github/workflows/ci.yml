@@ -9,6 +9,11 @@ on:
     branches: [main, master]
   pull_request:
 
+# Belt-and-braces: opt every action into Node.js 24 ahead of the June 2026
+# deadline so the deprecation warning never appears.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   ci:
     name: Lint, typecheck, test, build
