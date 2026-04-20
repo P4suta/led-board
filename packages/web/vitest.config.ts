@@ -2,7 +2,9 @@ import solid from 'vite-plugin-solid';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  plugins: [solid()],
+  // vitest vendors vite@6 while the workspace uses vite@7; cast to bypass the
+  // spurious Plugin type mismatch between the two internal vite copies.
+  plugins: [solid() as never],
   test: {
     name: 'web',
     include: ['src/**/*.test.{ts,tsx}'],
